@@ -18,7 +18,7 @@ module CompositePrimaryKeys
         def set_primary_keys(*keys)
           keys = keys.first if keys.first.is_a?(Array)
           keys = keys.map { |k| k.to_sym }
-          cattr_accessor :primary_keys
+          cattr_accessor :primary_keys, :auto_increment_column
           self.primary_keys = keys.to_composite_keys
 
           class_eval <<-EOV
@@ -37,7 +37,6 @@ module CompositePrimaryKeys
         end
 
         def set_auto_increment_column(column)
-          cattr_accessor :auto_increment_column
           self.auto_increment_column = column
         end
       end
@@ -108,11 +107,13 @@ module CompositePrimaryKeys
           quoted_pk_columns = self.class.primary_key.map { |col| connection.quote_column_name(col) }
           cols = quoted_column_names(attributes_minus_pks) << quoted_pk_columns
           vals = attributes_minus_pks.values << quoted_id
-          send("#{self.class.auto_increment_column}=",
-               connection.insert("INSERT INTO #{self.class.quoted_table_name} " \
-                                 "(#{cols.join(', ')}) " \
-                                 "VALUES (#{vals.join(', ')})",
-                                 "#{self.class.name} Create"))
+
+          value = connection.insert("INSERT INTO #{self.class.quoted_table_name} " \
+                                    "(#{cols.join(', ')}) " \
+                                    "VALUES (#{vals.join(', ')})",
+                                    "#{self.class.name} Create")
+
+          send("#{self.class.auto_increment_column}=", value) if self.class.auto_increment_column
 
           @new_record = false
           return true
