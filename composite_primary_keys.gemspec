@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: composite_primary_keys
 version: !ruby/object:Gem::Version 
-  version: 1.1.1
+  version: 1.1.2
 platform: ruby
 authors: 
 - Dr Nic Williams
@@ -11,27 +11,7 @@ cert_chain: []
 
 date: 2008-10-28 00:00:00 -07:00
 default_executable: 
-dependencies: 
-- !ruby/object:Gem::Dependency 
-  name: activerecord
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: 2.1.2
-    version: 
-- !ruby/object:Gem::Dependency 
-  name: hoe
-  type: :development
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: 1.8.2
-    version: 
+dependencies: []
 description: Composite key support for ActiveRecords
 email: drnicwilliams@gmail.com
 executables: []
