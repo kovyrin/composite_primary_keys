@@ -35,6 +35,11 @@ module CompositePrimaryKeys
         def composite?
           false
         end
+
+        def set_auto_increment_column(column)
+          cattr_accessor :auto_increment_column
+          self.auto_increment_column = column
+        end
       end
 
       module InstanceMethods
@@ -103,14 +108,12 @@ module CompositePrimaryKeys
           quoted_pk_columns = self.class.primary_key.map { |col| connection.quote_column_name(col) }
           cols = quoted_column_names(attributes_minus_pks) << quoted_pk_columns
           vals = attributes_minus_pks.values << quoted_id
-          connection.insert(
-            "INSERT INTO #{self.class.quoted_table_name} " +
-            "(#{cols.join(', ')}) " +
-            "VALUES (#{vals.join(', ')})",
-            "#{self.class.name} Create",
-            self.class.primary_key,
-            self.id
-          )
+          send("#{self.class.auto_increment_column}=",
+               connection.insert("INSERT INTO #{self.class.quoted_table_name} " \
+                                 "(#{cols.join(', ')}) " \
+                                 "VALUES (#{vals.join(', ')})",
+                                 "#{self.class.name} Create"))
+
           @new_record = false
           return true
         end
