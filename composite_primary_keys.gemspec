@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: composite_primary_keys
 version: !ruby/object:Gem::Version 
-  version: 1.1.3
+  version: 1.1.4
 platform: ruby
 authors: 
 - Dr Nic Williams
